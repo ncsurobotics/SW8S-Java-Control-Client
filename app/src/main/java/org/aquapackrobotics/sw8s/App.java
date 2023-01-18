@@ -15,10 +15,11 @@ import org.aquapackrobotics.sw8s.processEvent;
 
 public class App
 {
+
     public App(String address, int port)
     {
         
-        processEvent listener = new processEvent(address, port);
+        
 
         String currentMission = "N/A";
         String currentState = "N/A";
@@ -45,30 +46,24 @@ public class App
         //eStop.setMnemonic(KeyEvent.VK_ESCAPE);
         lowPanel.add(eStop);
         
-        //WASD
-            //W -
-        
-
         //High Panel and Content
         JPanel highPanel = new JPanel();
         highPanel.setBackground(darkGrey);
-        JLabel label = new JLabel("Enter Text");
+        JLabel label = new JLabel("                                ");
         label.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
         label.setForeground(white);
-        JTextField tf = new JTextField(50); // accepts upto 50 characters
-        JButton sendButton = new JButton("Send");
+        // JTextField tf = new JTextField(50); // accepts upto 50 characters
+        // JButton sendButton = new JButton("Send");
         highPanel.add(label);
-        highPanel.add(tf);
-        highPanel.add(sendButton);
+        // highPanel.add(tf);
+        // highPanel.add(sendButton);
 
         // Text Area at the Center
         JTextArea ta = new JTextArea();
-        ta.setText("Mission: " + currentMission + 
-                 "\nState:   " + currentState +
-                   "");
-        Font  f  = new Font(Font.DIALOG,  Font.BOLD, 50);
+        ta.setText("");
+        Font f= new Font(Font.DIALOG,  Font.BOLD, 50);
         ta.setFont(f);
-        ta.addKeyListener(listener);
+       
         ta.setEditable(false);
 
         //Adding Panel/Text Area to the frame.
@@ -76,9 +71,10 @@ public class App
         frame.getContentPane().add(BorderLayout.SOUTH, lowPanel);
         frame.getContentPane().add(BorderLayout.CENTER, ta);
         frame.setVisible(true);
+        
 
+        processEvent listener = new processEvent(address, port, ta);
     }
-
     public static void main(String args[])
     {
         App client;

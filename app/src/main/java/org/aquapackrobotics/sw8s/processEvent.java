@@ -9,6 +9,7 @@ import java.net.*;
 import java.io.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import org.aquapackrobotics.sw8s.App;
 
 public class processEvent implements KeyListener
 {
@@ -25,6 +26,7 @@ public class processEvent implements KeyListener
             //currentMission = "stopped";
             try
             {
+                
                 if(e.getKeyChar() == ' ') {
                     out.writeUTF("Over");
                     input.close();
@@ -41,10 +43,14 @@ public class processEvent implements KeyListener
                 System.out.println(i);
             }
         }
-    public processEvent(String address, int port){
+    public processEvent(String address, int port, JTextArea ta){
     // establish a connection
         try
         {
+            if (input.readUTF() == "Stop")
+            {
+                ta.setText("All = 0"); //Change to flashy
+            }
             socket = new Socket(address, port);
             System.out.println("Connected");
 
