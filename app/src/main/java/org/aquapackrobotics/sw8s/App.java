@@ -63,7 +63,6 @@ public class App
         ta.setText("");
         Font f= new Font(Font.DIALOG,  Font.BOLD, 50);
         ta.setFont(f);
-       
         ta.setEditable(false);
 
         //Adding Panel/Text Area to the frame.
@@ -74,6 +73,7 @@ public class App
         
 
         processEvent listener = new processEvent(address, port, ta);
+        ta.addKeyListener(listener);
     }
     public static void main(String args[])
     {

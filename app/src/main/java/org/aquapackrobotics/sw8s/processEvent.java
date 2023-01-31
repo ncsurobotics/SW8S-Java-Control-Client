@@ -47,15 +47,17 @@ public class processEvent implements KeyListener
     // establish a connection
         try
         {
+            socket = new Socket(address, port);
+            System.out.println("Connected");
+
+            /*
+            // takes input from terminal
+            input = new DataInputStream(System.in);
             if (input.readUTF() == "Stop")
             {
                 ta.setText("All = 0"); //Change to flashy
             }
-            socket = new Socket(address, port);
-            System.out.println("Connected");
-
-            // takes input from terminal
-            input = new DataInputStream(System.in);
+            */
 
             // sends output to the socket
             out = new DataOutputStream(socket.getOutputStream());
