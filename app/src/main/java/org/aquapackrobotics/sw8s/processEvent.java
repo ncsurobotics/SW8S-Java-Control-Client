@@ -15,8 +15,10 @@ public class processEvent implements KeyListener
 {
     // initialize socket and input output streams
         private Socket socket        = null;
+        private ServerSocket server   = null;
         private DataInputStream input = null;
         private DataOutputStream out     = null;
+
         
         public void keyReleased(KeyEvent event) {};
         public void keyTyped(KeyEvent event) {};
@@ -50,14 +52,20 @@ public class processEvent implements KeyListener
             socket = new Socket(address, port);
             System.out.println("Connected");
 
-            /*
-            // takes input from terminal
-            input = new DataInputStream(System.in);
-            if (input.readUTF() == "Stop")
+            // takes input from client
+            input = new DataInputStream(socket.getInputStream());
+
+            String line = input.readUTF();
+            System.out.println(line);
+            if (line.equals("Hello"))
             {
+                System.out.println("Hello World!");
+
+                //Testing* Server's message
+                System.out.println("Client: " + line);
+
                 ta.setText("All = 0"); //Change to flashy
             }
-            */
 
             // sends output to the socket
             out = new DataOutputStream(socket.getOutputStream());
