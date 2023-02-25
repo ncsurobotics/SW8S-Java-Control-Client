@@ -18,16 +18,34 @@ public class processEvent implements KeyListener
         private ServerSocket server   = null;
         private DataInputStream input = null;
         private DataOutputStream out     = null;
-
         
-        public void keyReleased(KeyEvent event) {};
+        private JTextArea ta = null;
+        private int port = 0;
+        private String address = null;
+        int y = 0;
+        int x = 0;
+        int z = 0;
+        int yaw = 0;
+        int pitch = 0;
+        int roll = 0;
+
+        @Override
+        public void keyReleased(KeyEvent e) {};
+        @Override
         public void keyTyped(KeyEvent event) {};
         @Override
-        public void keyPressed(KeyEvent e) {
-            // TO IMPLEMENT: ALL ZEROES, MAKE ROBOT NOT GO **BEFORE** SYSTEM.EXIT
+        public void keyPressed(KeyEvent e) {// TO IMPLEMENT: ALL ZEROES, MAKE ROBOT NOT GO **BEFORE** SYSTEM.EXIT
             //currentMission = "stopped";
+            try {
+                input = new DataInputStream(socket.getInputStream());
+                out = new DataOutputStream(socket.getOutputStream());
+            } 
+            catch (IOException a) {
+                // TODO: handle exception
+            }
             try
             {
+                
                 
                 if(e.getKeyChar() == ' ') {
                     out.writeUTF("Over");
@@ -35,51 +53,134 @@ public class processEvent implements KeyListener
                     out.close();
                     socket.close();
                 } else {
+                    System.out.println("Input Read:");
                     out.writeUTF(KeyEvent.getKeyText(e.getKeyCode()));
+                    receive(KeyEvent.getKeyText(e.getKeyCode()));
                 }
 
                 System.out.println("SEND COMMAND: " + KeyEvent.getKeyText(e.getKeyCode()));
             }
-            catch(IOException i)
+            catch(Exception i)
             {
                 System.out.println(i);
-            }
-        }
-    public processEvent(String address, int port, JTextArea ta){
+            }}
+
+
+    /**
+     * Constructor for processEvent
+     */
+    public processEvent(String address, int port, JTextArea ta) {
     // establish a connection
-        try
-        {
+        System.out.println("ProcessEvent runs");
+        this.ta = ta;
+        this.port = port;
+        this.address = address;
+        try {
             socket = new Socket(address, port);
-            System.out.println("Connected");
-
-            // takes input from client
-            input = new DataInputStream(socket.getInputStream());
-
-            String line = input.readUTF();
-            System.out.println(line);
-            if (line.equals("Hello"))
-            {
-                System.out.println("Hello World!");
-
-                //Testing* Server's message
-                System.out.println("Client: " + line);
-
-                ta.setText("All = 0"); //Change to flashy
-            }
-
-            // sends output to the socket
-            out = new DataOutputStream(socket.getOutputStream());
+            System.out.println("Socket is started");
+        } catch (Exception e) {
+            // TODO: handle exception
+            System.err.println("Error connecting to server: " + e.getMessage());
+            System.exit(0);
         }
-        catch(UnknownHostException u)
+        try {
+            
+            this.input = new DataInputStream(socket.getInputStream());
+            System.out.println("Socket Input is made");
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+        try {
+            this.out = new DataOutputStream(socket.getOutputStream());
+            System.out.println("Socket output is made");
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+        
+        
+        System.out.println("Socket Connected");
+
+        // takes input from client
+        
+   
+        
+    }
+
+    /**
+     * Looped with keyPressed
+     * Creates updated text for UI
+     */
+    private void receive(String line) {
+        line = line.toLowerCase();
+        try{
+        if (!line.equals("Over")){
+        try
+            {
+                System.out.println("Client: " + line);
+                switch (line){
+                    case "w":
+                        y +=1;
+                        break;
+                    case "s":
+                        y -=1;
+                        break;
+                    case "a":
+                        x -=1;
+                        break;
+                    case "d":
+                        x +=1; 
+                        break;
+                    case "q":
+                        roll +=1;
+                        break;
+                    case "e":
+                        roll -=1;
+                        break;
+                    case "i":
+                        z +=1;
+                        break;
+                    case "k":
+                        z -=1;
+                        break;
+                    case "j":
+                        yaw -=1;
+                        break;
+                    case "l":
+                        yaw +=1;
+                        break;
+                    case "u":
+                        pitch -=1;
+                        break;
+                    case "o":
+                        pitch +=1;
+                        break;
+                    default:
+                        System.out.println("Invalid message: " + line);
+                }
+
+                 ta.setText("Forward and Backward = " + y + 
+                        "\nSide to Side = " + x + 
+                        "\nUp and Down = " + z + 
+                        "\nYaw = " + yaw + 
+                        "\nRoll = " + roll + 
+                        "\nPitch = " + pitch);
+                //Look up making a thread java lambda
+            
+        }
+        catch(Exception u)
         {
             System.out.println(u);
         }
-        catch(IOException i)
-        {
-            System.out.println(i);
-        }
+        
 
-        // string to read message from input
-        String line = "";
+        }
+    }
+    catch(Exception u)
+        {
+            System.out.println(u);
+        }
+    
+    
+    
     }
 }
